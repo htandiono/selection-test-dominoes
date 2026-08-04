@@ -138,8 +138,7 @@ export function DominoesApp() {
           <p className="eyebrow">A small exercise in order</p>
           <h1 id="page-title">Every pair,<br />plainly arranged.</h1>
           <p className="intro">
-            Sort, flip and filter a classic set of dominoes. Each tile is drawn
-            with pips—just as it would sit on the table.
+            Sort, flip and filter a classic set of dominoes.
           </p>
         </div>
 
