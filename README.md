@@ -4,6 +4,12 @@ A small single-page React application for viewing and transforming a set of
 dominoes. The interface uses pip-based tiles instead of printed number pairs,
 while keeping every operation from the supplied selection-test brief.
 
+## Submission links
+
+- [CodeSandbox project](https://codesandbox.io/p/devbox/dominoes-student-template-forked-jcy3f3)
+- [CodeSandbox live preview](https://jcy3f3.csb.app/)
+- [Deployed application](https://domino-pair-study.steinway.chatgpt.site/)
+
 ## What is included
 
 - Render every item in the provided data as a graphical domino.
@@ -65,6 +71,9 @@ tests/
 └── rendered-html.test.mjs  # production-render smoke tests
 docs/
 └── LOGIC.md          # detailed, example-led logic walkthrough
+codesandbox/
+├── App.js            # self-contained version used by the supplied sandbox
+└── README.md         # reviewer-facing CodeSandbox logic guide
 ```
 
 ## Design approach
