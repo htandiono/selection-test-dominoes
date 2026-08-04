@@ -5,7 +5,9 @@ import { DominoTile } from "./DominoTile";
 import {
   DEFAULT_DOMINOES,
   countDoubles,
+  formatDominoSource,
   flipDominoes,
+  parseDominoSource,
   removeDominoesByTotal,
   removeRepeatedDominoes,
   sortDominoes,
@@ -21,6 +23,10 @@ export function DominoesApp() {
   const [dominoes, setDominoes] = useState<Domino[]>(() =>
     copyDominoes(DEFAULT_DOMINOES),
   );
+  const [sourceInput, setSourceInput] = useState(() =>
+    formatDominoSource(DEFAULT_DOMINOES),
+  );
+  const [sourceError, setSourceError] = useState("");
   const [removeTotal, setRemoveTotal] = useState("");
   const [status, setStatus] = useState("Showing the original set.");
 
@@ -33,8 +39,31 @@ export function DominoesApp() {
     [dominoes],
   );
 
+  const replaceDominoes = (next: Domino[]) => {
+    setDominoes(next);
+    setSourceInput(formatDominoSource(next));
+    setSourceError("");
+  };
+
+  const handleSourceSubmit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const result = parseDominoSource(sourceInput);
+
+    if (!result.ok) {
+      setSourceError(result.message);
+      setStatus("The source array needs attention.");
+      return;
+    }
+
+    replaceDominoes(result.dominoes);
+    setRemoveTotal("");
+    setStatus(
+      `Loaded ${result.dominoes.length} ${result.dominoes.length === 1 ? "tile" : "tiles"} from the source array.`,
+    );
+  };
+
   const applySort = (direction: SortDirection) => {
-    setDominoes((current) => sortDominoes(current, direction));
+    replaceDominoes(sortDominoes(dominoes, direction));
     setStatus(
       direction === "asc"
         ? "Sorted from the lowest total to the highest."
@@ -43,7 +72,7 @@ export function DominoesApp() {
   };
 
   const handleFlip = () => {
-    setDominoes((current) => flipDominoes(current));
+    replaceDominoes(flipDominoes(dominoes));
     setStatus("Flipped every tile.");
   };
 
@@ -51,7 +80,7 @@ export function DominoesApp() {
     const next = removeRepeatedDominoes(dominoes);
     const removed = dominoes.length - next.length;
 
-    setDominoes(next);
+    replaceDominoes(next);
     setStatus(
       removed === 0
         ? "There are no repeated pairs to remove."
@@ -77,7 +106,7 @@ export function DominoesApp() {
     const next = removeDominoesByTotal(dominoes, total);
     const removed = dominoes.length - next.length;
 
-    setDominoes(next);
+    replaceDominoes(next);
     setStatus(
       removed === 0
         ? `No tiles add up to ${total}.`
@@ -86,7 +115,7 @@ export function DominoesApp() {
   };
 
   const handleReset = () => {
-    setDominoes(copyDominoes(DEFAULT_DOMINOES));
+    replaceDominoes(copyDominoes(DEFAULT_DOMINOES));
     setRemoveTotal("");
     setStatus("Restored the original seven tiles.");
   };
@@ -120,7 +149,7 @@ export function DominoesApp() {
             <dd>{stats.tiles.toString().padStart(2, "0")}</dd>
           </div>
           <div>
-            <dt>Doubles</dt>
+            <dt>Double numbers</dt>
             <dd>{stats.doubles.toString().padStart(2, "0")}</dd>
           </div>
           <div>
@@ -175,6 +204,32 @@ export function DominoesApp() {
             </div>
           </div>
 
+          <form className="source-form" onSubmit={handleSourceSubmit}>
+            <label htmlFor="source-array">Source</label>
+            <p>Enter JSON pairs. Each side can be a whole number from 0 to 6.</p>
+            <textarea
+              id="source-array"
+              rows={5}
+              spellCheck="false"
+              value={sourceInput}
+              aria-invalid={sourceError ? "true" : "false"}
+              aria-describedby="source-help source-error"
+              onChange={(event) => {
+                setSourceInput(event.target.value);
+                setSourceError("");
+              }}
+            />
+            <p id="source-help" className="source-example">
+              Example: [[6,1],[1,1],[3,4]]
+            </p>
+            <p id="source-error" className="field-error" aria-live="polite">
+              {sourceError}
+            </p>
+            <button className="apply-source-button" type="submit">
+              Apply source <span aria-hidden="true">→</span>
+            </button>
+          </form>
+
           <div className="control-group">
             <p className="control-label">Sort by pip total</p>
             <div className="button-row">
@@ -225,7 +280,7 @@ export function DominoesApp() {
       </section>
 
       <footer>
-        <p>Seven tiles. Six small actions. One clear state.</p>
+        <p>Any set. Seven small actions. One clear state.</p>
         <p>Dominoes / 2026</p>
       </footer>
     </main>

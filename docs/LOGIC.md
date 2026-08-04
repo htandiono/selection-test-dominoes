@@ -21,7 +21,23 @@ The whole collection is an array of those tuples:
 const dominoes = [[6, 1], [4, 3], [1, 1]];
 ```
 
-## 2. Calculating totals
+## 2. Parsing source input
+
+Before totals are calculated, editable source text is parsed with
+`JSON.parse`. The result is accepted only when it is an array and every item is
+exactly two whole numbers between `0` and `6`:
+
+```text
+[[6,1],[2,2]] → valid
+[[1,7]]       → invalid: 7 is outside the supported pip range
+[[1,2,3]]     → invalid: a domino must have exactly two sides
+```
+
+Invalid text never replaces the last valid set. Valid text is normalized with
+`JSON.stringify`, then becomes the single collection used by the tiles and all
+summary values.
+
+## 3. Calculating totals
 
 The same small helper is reused wherever a total is needed:
 
@@ -34,7 +50,7 @@ logic.
 
 For `[6, 1]`, the helper returns `7`.
 
-## 3. Counting doubles
+## 4. Counting doubles
 
 A double has equal values on both sides.
 
@@ -53,7 +69,7 @@ dominoes.filter(([first, second]) => first === second).length;
 The summary is recalculated from the current set, so removing or resetting tiles
 immediately updates the displayed double count.
 
-## 4. Sorting
+## 5. Sorting
 
 Sorting has three comparison levels.
 
@@ -77,7 +93,7 @@ same comparisons without maintaining a second sorting algorithm.
 The function starts with `[...dominoes]`. This creates a new array before calling
 JavaScript's in-place `sort`, so the caller's original array remains untouched.
 
-## 5. Flipping
+## 6. Flipping
 
 Flipping swaps the two values of every tuple:
 
@@ -93,7 +109,7 @@ Example:
 
 `map` returns a new array and a new tuple for every domino.
 
-## 6. Removing repeated pairs
+## 7. Removing repeated pairs
 
 The supplied requirement treats orientation as irrelevant. These three values
 are members of the same repeated group:
@@ -126,7 +142,7 @@ result: [1,3]
 The two-pass approach is linear: each domino is visited once to count and once
 to filter.
 
-## 7. Removing a chosen total
+## 8. Removing a chosen total
 
 Filtering by total keeps only tiles that do not match the requested value:
 
@@ -146,7 +162,7 @@ Before filtering, the UI validates that the submitted value is a whole number
 between `0` and `12`. Those are the smallest and largest totals in a standard
 double-six set.
 
-## 8. Resetting safely
+## 9. Resetting safely
 
 The default array is a constant and is never edited. Reset maps over it to make
 fresh tuples:
@@ -158,7 +174,7 @@ DEFAULT_DOMINOES.map(([first, second]) => [first, second]);
 That copy makes the reset independent of any array that was previously sorted,
 flipped, or filtered.
 
-## 9. Turning numbers into pips
+## 10. Turning numbers into pips
 
 The visual component uses a 3 × 3 grid. Positions are numbered like this:
 
@@ -182,7 +198,7 @@ Each face value maps to the positions it needs:
 The renderer places one circular element at each listed position. Zero maps to
 an empty list, so a blank face is supported without a special rendering branch.
 
-## 10. How React connects the pieces
+## 11. How React connects the pieces
 
 The data flow is intentionally one-way:
 

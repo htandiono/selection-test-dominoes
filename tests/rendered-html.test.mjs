@@ -34,6 +34,9 @@ test("server-renders the finished dominoes workspace", async () => {
   assert.match(html, /plainly arranged\./);
   assert.match(html, /Current set/);
   assert.match(html, /Arrange the set/);
+  assert.match(html, />Source</);
+  assert.match(html, /Apply source/);
+  assert.match(html, /Double numbers/);
   assert.match(html, /Remove repeats/);
   assert.match(html, /Remove by total/);
   assert.match(html, /Reset original set/);

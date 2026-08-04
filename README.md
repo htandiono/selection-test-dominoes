@@ -7,7 +7,8 @@ while keeping every operation from the supplied selection-test brief.
 ## What is included
 
 - Render every item in the provided data as a graphical domino.
-- Show the live tile count, double count, and total pip count.
+- Accept a custom source array and redraw the collection from that input.
+- Show the live tile count, double-number count, and total pip count.
 - Sort ascending or descending by total, then by the two sides.
 - Flip every domino.
 - Remove every repeated pair, including reversed copies.
@@ -91,8 +92,10 @@ type Domino = readonly [number, number];
 functions do not mutate their input, which makes action order predictable and
 keeps each rule easy to test.
 
-Two small UI states sit beside the data:
+Three small UI concerns sit beside the data:
 
+- `sourceInput` contains the editable JSON representation of the collection.
+- `sourceError` contains a friendly validation message when the input is invalid.
 - `removeTotal` contains the number typed into the removal field.
 - `status` contains the latest human-readable action result.
 
@@ -100,6 +103,17 @@ The three summary values are derived from the current array with `useMemo`.
 They are never stored separately, so they cannot drift out of sync.
 
 ## Requirement decisions
+
+### Editable source
+
+The source field accepts a JSON array of two-number pairs, for example
+`[[6,1],[2,2],[0,4]]`. Each side must be a whole number from `0` to `6`.
+Applying valid input replaces the current collection, redraws the graphical
+tiles, and immediately recalculates the tile, double-number, and pip summaries.
+
+Invalid input leaves the last valid collection visible and explains what needs
+to be corrected. Sorting, flipping, and removal also update the source field so
+it always describes the tiles currently on the table.
 
 ### Sort order
 

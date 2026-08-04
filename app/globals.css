@@ -29,13 +29,15 @@ body {
 }
 
 button,
-input {
+input,
+textarea {
   font: inherit;
 }
 
 button,
 a,
-input {
+input,
+textarea {
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -62,6 +64,7 @@ button {
 footer p,
 .section-index,
 .control-label,
+.source-form label,
 .domino-item figcaption {
   font-family: var(--font-geist-mono), monospace;
   text-transform: uppercase;
@@ -302,6 +305,7 @@ h1 {
 }
 
 .control-group,
+.source-form,
 .remove-form {
   margin-top: 2.4rem;
   padding-top: 1.35rem;
@@ -309,6 +313,7 @@ h1 {
 }
 
 .control-label,
+.source-form label,
 .remove-form label {
   display: block;
   margin: 0 0 0.9rem;
@@ -326,6 +331,7 @@ h1 {
 
 .button-row button,
 .input-row button,
+.apply-source-button,
 .reset-button,
 .text-button {
   border: 1px solid var(--ink);
@@ -349,6 +355,8 @@ h1 {
 .button-row button:focus-visible,
 .input-row button:hover,
 .input-row button:focus-visible,
+.apply-source-button:hover,
+.apply-source-button:focus-visible,
 .reset-button:hover,
 .reset-button:focus-visible {
   background: var(--ink);
@@ -361,16 +369,60 @@ button:active {
 
 button:focus-visible,
 input:focus-visible,
+textarea:focus-visible,
 a:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }
 
+.source-form > p,
 .remove-form p {
   margin: -0.3rem 0 1.1rem;
   color: var(--muted);
   font-size: 0.78rem;
   line-height: 1.5;
+}
+
+.source-form textarea {
+  display: block;
+  width: 100%;
+  min-height: 112px;
+  padding: 0.85rem;
+  resize: vertical;
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  background: rgba(255, 255, 255, 0.28);
+  color: var(--ink);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.74rem;
+  line-height: 1.55;
+}
+
+.source-form textarea[aria-invalid="true"] {
+  border-color: var(--accent);
+}
+
+.source-form .source-example {
+  margin: 0.7rem 0 0;
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.65rem;
+}
+
+.source-form .field-error {
+  min-height: 1.2rem;
+  margin: 0.45rem 0 0;
+  color: var(--accent);
+  font-size: 0.72rem;
+}
+
+.apply-source-button {
+  display: flex;
+  width: 100%;
+  min-height: 52px;
+  margin-top: 0.55rem;
+  padding: 0 1rem;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .input-row {
@@ -506,6 +558,7 @@ footer p {
   }
 
   .remove-form,
+  .source-form,
   .reset-button {
     max-width: 560px;
   }
